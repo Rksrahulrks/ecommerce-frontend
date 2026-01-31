@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.main-header {
+  display: flex;
+    align-items: center;            /* upar-neeche center */
+  justify-content: space-between; /* left aur right spread */
+  padding: 15px 30px;
+}
+.nav-links {
+  display: flex;
+}
+.main-header {
+  background-color: #ecc953;
+  border-bottom: 1px solid #ddd;
+}
+.nav-links {
+  display: flex;
+}
+@media (max-width: 768px) {
+
+  .nav-links {
+    display: none;   /* menu hide */
+  }
+
+  .hamburger {
+    display: block;  /* ☰ show */
+  }
+
+}
+@media (max-width: 1024px) {
+  .search-bar input {
+    width: 200px;
+  }
+}
+.logo img {
+  width: 50px;   /* yahin size decide hota hai */
+  height: auto;
+}
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #f0d25c;
+}
