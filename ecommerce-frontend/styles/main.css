@@ -1,52 +1,128 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
-.main-header {
-  display: flex;
-    align-items: center;            /* upar-neeche center */
-  justify-content: space-between; /* left aur right spread */
-  padding: 15px 30px;
-}
-.nav-links {
-  display: flex;
-}
-.main-header {
-  background-color: #ecc953;
-  border-bottom: 1px solid #ddd;
-}
-.nav-links {
-  display: flex;
-}
-@media (max-width: 768px) {
 
-  .nav-links {
-    display: none;   /* menu hide */
-  }
-
-  .hamburger {
-    display: block;  /* ☰ show */
-  }
-
-}
-@media (max-width: 1024px) {
-  .search-bar input {
-    width: 200px;
-  }
-}
-.logo img {
-  width: 50px;   /* yahin size decide hota hai */
-  height: auto;
-}
-.nav-links {
-  display: flex;
-  gap: 20px;
-}
+/* HEADER */
 .main-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
-  background: #f0d25c;
+  padding: 12px 16px;
+  background: #ecc953;
+}
+
+/* LEFT */
+.left {
+  display: none;
+}
+
+/* LOGO */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  width: 40px;
+}
+
+/* DESKTOP NAV */
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+
+/* RIGHT */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.search-input {
+  padding: 6px 10px;
+  width: 220px;
+}
+
+.search-icon {
+  display: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* CART */
+.cart {
+  position: relative;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.cart-count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: red;
+  color: white;
+  width: 16px;
+  height: 16px;
+  font-size: 11px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* MOBILE MENU */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: #ecc953;
+}
+
+.mobile-menu a {
+  padding: 12px;
+  text-decoration: none;
+  color: black;
+  border-top: 1px solid #ddd;
+}
+
+/* 📱 MOBILE VIEW */
+@media (max-width: 768px) {
+
+  /* hamburger left */
+  .left {
+    display: block;
+  }
+
+  .hamburger {
+    font-size: 26px;
+    cursor: pointer;
+  }
+
+  /* desktop nav hide */
+  .nav-links {
+    display: none;
+  }
+
+  /* search input hide */
+  .search-input {
+    display: none;
+  }
+
+  /* search icon show */
+  .search-icon {
+    display: block;
+  }
+
+  .logo h2 {
+    font-size: 18px;
+  }
 }

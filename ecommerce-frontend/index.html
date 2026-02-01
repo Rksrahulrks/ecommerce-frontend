@@ -1,21 +1,28 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Commerce Frontend</title>
-    <link rel="stylesheet" href="styles/main.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-Commerce Frontend</title>
+  <link rel="stylesheet" href="styles/main.css" />
 </head>
 
 <body>
-    <header class="main-header">
-  <div class="image">
-    <img src="images.webp" alt="">
-    <h2>RR VADAPAV</h2>
-    <img src="logo.jpg" alt="">
+
+<header class="main-header">
+
+  <!-- LEFT : hamburger (mobile only) -->
+  <div class="left">
+    <div class="hamburger">☰</div>
   </div>
 
+  <!-- CENTER : logo -->
+  <div class="logo">
+    <img src="images.webp" alt="">
+    <h2>RR VADAPAV</h2>
+  </div>
+
+  <!-- DESKTOP NAV -->
   <nav class="nav-links">
     <a href="#">Home</a>
     <a href="#">Products</a>
@@ -23,14 +30,27 @@
     <a href="#">Contact</a>
   </nav>
 
+  <!-- RIGHT -->
   <div class="header-right">
-    <input type="text" placeholder="search products...">
-    🛒 <span>0</span>
-    ☰
+    <input class="search-input" type="text" placeholder="Search products">
+
+    <div class="search-icon">🔍</div>
+
+    <div class="cart">
+      🛒
+      <span class="cart-count">0</span>
+    </div>
   </div>
+
 </header>
+
+<!-- MOBILE MENU (hamburger ke andar) -->
+<nav class="mobile-menu">
+  <a href="#">Home</a>
+  <a href="#">Products</a>
+  <a href="#">About</a>
+  <a href="#">Contact</a>
+</nav>
 
 </body>
 </html>
-
-
