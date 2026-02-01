@@ -2,23 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>E-Commerce Frontend</title>
-  <link rel="stylesheet" href="styles/main.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>E-Commerce Header</title>
+  <link rel="stylesheet" href="styles/main.css"/>
 </head>
-
 <body>
 
 <header class="main-header">
 
-  <!-- LEFT : hamburger (mobile only) -->
+  <!-- LEFT -->
   <div class="left">
-    <div class="hamburger">☰</div>
+    <div class="hamburger">
+      <span class="icon">☰</span>
+    </div>
   </div>
 
-  <!-- CENTER : logo -->
+  <!-- LOGO -->
   <div class="logo">
-    <img src="images.webp" alt="">
+    <img src="images.webp" alt=""
     <h2>RR VADAPAV</h2>
   </div>
 
@@ -33,7 +34,6 @@
   <!-- RIGHT -->
   <div class="header-right">
     <input class="search-input" type="text" placeholder="Search products">
-
     <div class="search-icon">🔍</div>
 
     <div class="cart">
@@ -44,7 +44,7 @@
 
 </header>
 
-<!-- MOBILE MENU (hamburger ke andar) -->
+<!-- MOBILE MENU -->
 <nav class="mobile-menu">
   <a href="#">Home</a>
   <a href="#">Products</a>
@@ -52,5 +52,15 @@
   <a href="#">Contact</a>
 </nav>
 
+<!-- SEARCH POPUP -->
+<div class="search-popup">
+  <input type="text" placeholder="Search products...">
+  <button class="close-search">✖</button>
+</div>
+
+<!-- DEMO BUTTON -->
+<button class="add-cart-btn">Add to Cart (Demo)</button>
+
+<script src="scripts/app.js"></script>
 </body>
 </html>
