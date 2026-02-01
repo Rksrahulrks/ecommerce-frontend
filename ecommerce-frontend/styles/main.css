@@ -1,6 +1,13 @@
-body {
+/* Reset */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   font-family: Arial, sans-serif;
+}
+
+body, html {
+  height: 100%;
 }
 
 /* HEADER */
@@ -10,17 +17,32 @@ body {
   justify-content: space-between;
   padding: 12px 16px;
   background: #ecc953;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .left {
   display: none;
 }
 
-.logo h2 {
-  margin: 0;
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* NAV */
+.logo img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.logo h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
 .nav-links {
   display: flex;
   gap: 20px;
@@ -29,9 +51,9 @@ body {
 .nav-links a {
   text-decoration: none;
   color: black;
+  font-weight: 500;
 }
 
-/* RIGHT */
 .header-right {
   display: flex;
   align-items: center;
@@ -48,7 +70,6 @@ body {
   cursor: pointer;
 }
 
-/* CART */
 .cart {
   position: relative;
   font-size: 22px;
@@ -104,6 +125,7 @@ body {
   align-items: center;
   transition: top 0.3s ease;
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 2000;
 }
 
 .search-popup.open {
@@ -123,7 +145,7 @@ body {
   cursor: pointer;
 }
 
-/* DEMO BTN */
+/* DEMO BUTTON */
 .add-cart-btn {
   margin: 20px;
   padding: 10px 15px;
@@ -131,53 +153,128 @@ body {
 
 /* MOBILE */
 @media (max-width: 768px) {
-  .left {
-    display: block;
-  }
-
-  .hamburger {
-    font-size: 26px;
-    cursor: pointer;
-  }
-
-  .nav-links {
-    display: none;
-  }
-
-  .search-input {
-    display: none;
-  }
-
-  .search-icon {
-    display: block;
-  }
+  .left { display: block; }
+  .hamburger { font-size: 26px; cursor: pointer; }
+  .nav-links { display: none; }
+  .search-input { display: none; }
+  .search-icon { display: block; }
+  .logo img { width: 32px; height: 32px; }
+  .logo h2 { font-size: 16px; }
 }
-.logo {
+
+/* --- HERO SECTION BASE (Desktop) --- */
+.hero {
+  position: relative;
+  height: 80vh; /* Changed from 100vh to avoid content overlap on some mobile browsers */
   display: flex;
-  align-items: center;      /* image + text vertical center */
-  gap: 10px;                /* image aur text ke beech gap */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+  /* Adding a dark overlay to ensure text is ALWAYS readable over the images */
+  background: rgba(0, 0, 0, 0.4); 
 }
 
-/* LOGO IMAGE */
-.logo img {
-  width: 40px;              /* ⭐ yahin se size control hota hai */
-  height: 40px;
-  object-fit: contain;      /* image distort nahi hogi */
+.hero-content {
+  position: relative;
+  z-index: 2; /* Ensure it stays above the JS-generated background divs */
+  padding: 0 20px;
 }
 
-/* LOGO TEXT */
-.logo h2 {
-  font-size: 20px;
-  margin: 0;
+.hero-content h1 {
+  font-size: 3rem; /* Using rem for better scaling */
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
+
+.hero-content p {
+  font-size: 1.25rem;
+  margin-bottom: 30px;
+}
+
+.cta-button {
+  display: inline-block; /* Ensure it respects padding/width */
+  text-decoration: none;
+  background: #ff4e00;
+  color: #fff;
+  padding: 16px 32px; /* Increased for desktop */
+  border-radius: 8px;
   font-weight: 600;
+  transition: transform 0.2s ease, background 0.3s ease;
 }
+
+/* --- RESPONSIVE ADJUSTMENTS --- */
 @media (max-width: 768px) {
-  .logo img {
-    width: 32px;
-    height: 32px;
+  /* Existing Header Mobile Styles */
+  .left { display: block; }
+  .hamburger { font-size: 26px; cursor: pointer; }
+  .nav-links { display: none; }
+  .search-input { display: none; }
+  .search-icon { display: block; }
+  .logo img { width: 32px; height: 32px; }
+  .logo h2 { font-size: 16px; }
+
+  /* New Hero Mobile Styles */
+  .hero {
+    height: 70vh; /* Slightly shorter on mobile */
   }
 
-  .logo h2 {
-    font-size: 16px;
+  .hero-content h1 {
+    font-size: 2rem; /* Scaled down for mobile */
   }
+
+  .hero-content p {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+
+  .cta-button {
+    width: 40%;/*Makes it much easier to tap on a phone */
+    max-width: 200px;
+    padding: 18px 20px; /* Thicker button for better touch target */
+    font-size: 1.1rem;
+  }
+}
+/* --- ANIMATION KEYFRAMES --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- APPLYING LOAD ANIMATIONS --- */
+.hero-content h1 {
+  /* ... existing styles ... */
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.hero-content p {
+  /* ... existing styles ... */
+  opacity: 0; /* Start hidden */
+  animation: fadeInUp 0.8s ease-out 0.3s forwards; /* 0.3s delay */
+}
+
+.cta-button {
+  /* ... existing styles ... */
+  opacity: 0; /* Start hidden */
+  animation: fadeInUp 0.8s ease-out 0.6s forwards; /* 0.6s delay */
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth hover */
+}
+
+/* --- INTERACTIVE HOVER EFFECTS --- */
+.cta-button:hover {
+  background: #e03e00;
+  transform: scale(1.05); /* Slight grow effect */
+  box-shadow: 0 10px 20px rgba(255, 78, 0, 0.3);
+}
+
+.cta-button:active {
+  transform: scale(0.98); /* Press-down effect when clicked */
 }
