@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RR MALL • Cart</title>
+  <link rel="stylesheet" href="styles/main.css"/>
+</head>
+<body>
+
+<header class="main-header">
+  <div class="left">
+    <button class="hamburger" aria-label="Open menu">☰</button>
+  </div>
+
+  <div class="logo">
+    <h2>RR MALL</h2>
+    <span class="logo-tag">Premium</span>
+  </div>
+
+  <nav class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#shop">Products</a>
+    <a href="cart.html" class="active-link">Cart</a>
+    <a href="#">Contact</a>
+  </nav>
+
+  <div class="header-right">
+    <a class="back-link" href="index.html#shop">← Continue Shopping</a>
+    <button class="cart" aria-label="Cart">
+      🛒 <span class="cart-count">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- MOBILE SLIDE MENU -->
+<nav class="mobile-menu" aria-label="Mobile menu">
+  <div class="mobile-menu-header">
+    <h3>RR MALL</h3>
+    <button class="close-menu" aria-label="Close menu">✖</button>
+  </div>
+  <a href="index.html">Home</a>
+  <a href="index.html#shop">Products</a>
+  <a href="cart.html">Cart</a>
+  <a href="#">Contact</a>
+</nav>
+<div class="menu-overlay" aria-hidden="true"></div>
+
+<main class="cart-page">
+  <div class="cart-page-head">
+    <div>
+      <h1 class="cart-title">Your Cart</h1>
+      <p class="cart-sub">Review items, update quantities, and checkout.</p>
+    </div>
+
+    <div class="cart-actions">
+      <a class="cp-btn ghost" href="index.html#shop">← Add More</a>
+      <button id="cpClearBtn" class="cp-btn danger">Clear</button>
+    </div>
+  </div>
+
+  <section class="cart-layout">
+    <!-- LEFT: ITEMS -->
+    <div class="cart-panel">
+      <div id="cpEmpty" class="cp-empty" hidden>
+        <div class="cp-empty-card">
+          <div class="cp-empty-emoji">🛒</div>
+          <h3>Your cart is empty</h3>
+          <p>Add products to see them here.</p>
+          <a class="cp-btn primary" href="index.html#shop">Shop Now</a>
+        </div>
+      </div>
+
+      <div id="cpList" class="cp-list"></div>
+    </div>
+
+    <!-- RIGHT: SUMMARY -->
+    <aside class="cart-summary-panel">
+      <div class="cp-summary-card">
+        <h3 class="cp-sum-title">Order Summary</h3>
+
+        <div class="cp-sum-row">
+          <span>Items</span>
+          <b id="cpItemsCount">0</b>
+        </div>
+        <div class="cp-sum-row">
+          <span>Subtotal</span>
+          <b id="cpSubtotal">₹ 0</b>
+        </div>
+        <div class="cp-sum-row small">
+          <span>Delivery</span>
+          <span id="cpDelivery">₹ 0</span>
+        </div>
+        <div class="cp-sum-row total">
+          <span>Total</span>
+          <b id="cpTotal">₹ 0</b>
+        </div>
+
+        <div class="cp-coupon">
+          <label for="cpCoupon" class="cp-coupon-label">Coupon (optional)</label>
+          <div class="cp-coupon-row">
+            <input id="cpCoupon" type="text" placeholder="RR10" />
+            <button id="cpApplyCoupon" class="cp-btn ghost">Apply</button>
+          </div>
+          <p id="cpCouponNote" class="cp-coupon-note"></p>
+        </div>
+
+        <button id="cpCheckoutBtn" class="cp-btn primary big">Proceed to Checkout</button>
+        <p class="cp-safe">✅ Secure checkout • ✅ Easy returns</p>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<div id="toast" class="toast" aria-live="polite"></div>
+<script src="scripts/cart.js"></script>
+</body>
+</html>
