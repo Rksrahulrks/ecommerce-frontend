@@ -1,11 +1,9 @@
-// ===== CONFIG =====
 const INR_RATE = 85;
 const API_URL = "https://fakestoreapi.com/products";
 const CACHE_KEY = "rrmall_products_cache_light_v1";
 const CACHE_TTL_MS = 10 * 60 * 1000;
-const CART_KEY = "rrmall_cart";
+const CART_KEY = "rrmall_cart_v2";
 
-// ===== HELPERS =====
 const money = (usd) => `₹ ${Math.round(Number(usd || 0) * INR_RATE)}`;
 
 function toast(msg) {
@@ -16,7 +14,6 @@ function toast(msg) {
   clearTimeout(window.__toastTimer);
   window.__toastTimer = setTimeout(() => t.classList.remove("show"), 1200);
 }
-
 function stars(rate){
   const r = Math.max(0, Math.min(5, Number(rate || 0)));
   const full = Math.floor(r);
@@ -24,7 +21,7 @@ function stars(rate){
   return "★".repeat(full) + "✩".repeat(empty);
 }
 
-// ===== MENU =====
+/* MENU */
 const hamburgerBtn = document.querySelector(".hamburger");
 const mobileMenu = document.querySelector(".mobile-menu");
 const menuOverlay = document.querySelector(".menu-overlay");
@@ -34,14 +31,14 @@ hamburgerBtn?.addEventListener("click", () => { mobileMenu.classList.add("open")
 closeMenuBtn?.addEventListener("click", () => { mobileMenu.classList.remove("open"); menuOverlay.classList.remove("active"); });
 menuOverlay?.addEventListener("click", () => { mobileMenu.classList.remove("open"); menuOverlay.classList.remove("active"); });
 
-// ===== SEARCH POPUP =====
+/* SEARCH POPUP */
 const searchIcon = document.querySelector(".search-icon");
 const searchPopup = document.querySelector(".search-popup");
 const closeSearch = document.querySelector(".close-search");
 searchIcon?.addEventListener("click", () => searchPopup.classList.add("open"));
 closeSearch?.addEventListener("click", () => searchPopup.classList.remove("open"));
 
-// ===== TYPING =====
+/* TYPING */
 const typingEl = document.querySelector(".typing");
 const lines = [
   "Premium brands • Smooth shopping • Fast delivery",
@@ -49,11 +46,9 @@ const lines = [
   "Big savings • Easy returns • Secure checkout"
 ];
 let li = 0, ci = 0, deleting = false;
-
 function typeLoop() {
   if (!typingEl) return;
   const text = lines[li];
-
   if (!deleting) {
     ci++;
     typingEl.textContent = text.slice(0, ci);
@@ -67,7 +62,7 @@ function typeLoop() {
 }
 typeLoop();
 
-// ===== ELEMENTS =====
+/* ELEMENTS */
 const productGrid = document.getElementById("productGrid");
 const skeletonGrid = document.getElementById("skeletonGrid");
 const productStatus = document.getElementById("productStatus");
@@ -92,29 +87,41 @@ const heroSearchBtn = document.getElementById("heroSearchBtn");
 const topSearchInput = document.getElementById("topSearchInput");
 const popupSearchInput = document.getElementById("popupSearchInput");
 
-// ===== STATE =====
+/* QUICK VIEW */
+const qvOverlay = document.getElementById("qvOverlay");
+const qvModal = document.getElementById("qvModal");
+const qvClose = document.getElementById("qvClose");
+const qvImg = document.getElementById("qvImg");
+const qvCat = document.getElementById("qvCat");
+const qvRating = document.getElementById("qvRating");
+const qvTitle = document.getElementById("qvTitle");
+const qvPrice = document.getElementById("qvPrice");
+const qvOld = document.getElementById("qvOld");
+const qvDesc = document.getElementById("qvDesc");
+const qvAdd = document.getElementById("qvAdd");
+const qvGo = document.getElementById("qvGo");
+
+/* STATE */
 let products = [];
 let cart = loadCart();
 
-// ===== CART =====
-function loadCart() {
+/* CART CORE */
+function loadCart(){
   try { return JSON.parse(localStorage.getItem(CART_KEY) || "{}"); }
   catch { return {}; }
 }
-function saveCart() {
-  try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch {}
+function saveCart(){ try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch {} }
+function cartCount(){ return Object.values(cart).reduce((s, it) => s + (it.qty || 0), 0); }
+function cartSubtotalUsd(){
+  return Object.values(cart).reduce((s, it) => s + (Number(it.unitPrice || it.price || 0) * (it.qty || 0)), 0);
 }
-function cartCount() { return Object.values(cart).reduce((s, it) => s + it.qty, 0); }
-function cartSubtotalUsd() { return Object.values(cart).reduce((s, it) => s + it.price * it.qty, 0); }
-
-function openCart(){
-  cartDrawer.classList.add("open");
-  cartOverlay.classList.add("active");
+function syncCartBadge(){
+  const count = cartCount();
+  if (cartCountEl) cartCountEl.textContent = count;
+  if (mobileCartCount) mobileCartCount.textContent = count;
 }
-function closeCart(){
-  cartDrawer.classList.remove("open");
-  cartOverlay.classList.remove("active");
-}
+function openCart(){ cartDrawer.classList.add("open"); cartOverlay.classList.add("active"); }
+function closeCart(){ cartDrawer.classList.remove("open"); cartOverlay.classList.remove("active"); }
 cartOpenBtns.forEach(btn => btn.addEventListener("click", openCart));
 closeCartBtn?.addEventListener("click", closeCart);
 cartOverlay?.addEventListener("click", closeCart);
@@ -123,11 +130,14 @@ function renderCart(){
   const items = Object.values(cart);
 
   cartItemsEl.innerHTML = items.length ? items.map(it => `
-    <div class="cart-item" data-id="${it.id}">
+    <div class="cart-item" data-key="${it.key}">
       <img src="${it.image}" alt="">
       <div class="info">
-        <div class="title">${it.title}</div>
-        <div class="price">${money(it.price)}</div>
+        <div class="title">
+          ${it.title}
+          ${it.size || it.color ? `<div style="font-size:11px;opacity:.75;font-weight:900;margin-top:2px;">${it.size || ""} ${it.color ? "• " + it.color : ""}</div>` : ""}
+        </div>
+        <div class="price">${money(it.unitPrice || it.price)} × ${it.qty}</div>
         <div class="qty-row">
           <button class="qty-btn" data-action="dec">-</button>
           <b>${it.qty}</b>
@@ -147,11 +157,8 @@ function renderCart(){
   cartDeliveryEl.textContent = `₹ ${deliveryInr}`;
   cartTotalEl.textContent = `₹ ${totalInr}`;
 
-  const count = cartCount();
-  cartCountEl.textContent = count;
-  if (mobileCartCount) mobileCartCount.textContent = count;
-
   saveCart();
+  syncCartBadge();
 }
 
 cartItemsEl.addEventListener("click", (e) => {
@@ -160,28 +167,21 @@ cartItemsEl.addEventListener("click", (e) => {
   const row = e.target.closest(".cart-item");
   if (!row) return;
 
-  const id = row.dataset.id;
-  if (!cart[id]) return;
+  const key = row.dataset.key;
+  if (!cart[key]) return;
 
   const action = btn.dataset.action;
-  if (action === "inc") cart[id].qty += 1;
-  if (action === "dec") cart[id].qty = Math.max(1, cart[id].qty - 1);
-  if (action === "remove") delete cart[id];
+  if (action === "inc") cart[key].qty = Math.min(10, cart[key].qty + 1);
+  if (action === "dec") cart[key].qty = Math.max(1, cart[key].qty - 1);
+  if (action === "remove") delete cart[key];
 
   renderCart();
 });
 
-clearCartBtn?.addEventListener("click", () => {
-  cart = {};
-  renderCart();
-  toast("Cart cleared");
-});
+clearCartBtn?.addEventListener("click", () => { cart = {}; renderCart(); toast("Cart cleared"); });
+checkoutBtn?.addEventListener("click", () => toast(cartCount() ? "Checkout coming soon 😈" : "Cart is empty"));
 
-checkoutBtn?.addEventListener("click", () => {
-  toast(cartCount() ? "Checkout coming soon 😈" : "Cart is empty");
-});
-
-// ===== UI STATUS + SKELETON =====
+/* STATUS + SKELETON */
 function setStatus(type, html){
   productStatus.innerHTML = type ? `<div class="${type}">${html}</div>` : "";
 }
@@ -191,20 +191,30 @@ function showSkeletons(count=8){
 }
 function hideSkeletons(){ skeletonGrid.innerHTML = ""; }
 
-// ===== QUICK VIEW MODAL =====
-const qvOverlay = document.getElementById("qvOverlay");
-const qvModal = document.getElementById("qvModal");
-const qvClose = document.getElementById("qvClose");
-const qvImg = document.getElementById("qvImg");
-const qvCat = document.getElementById("qvCat");
-const qvRating = document.getElementById("qvRating");
-const qvTitle = document.getElementById("qvTitle");
-const qvPrice = document.getElementById("qvPrice");
-const qvOld = document.getElementById("qvOld");
-const qvDesc = document.getElementById("qvDesc");
-const qvAdd = document.getElementById("qvAdd");
-const qvGo = document.getElementById("qvGo");
+/* ADD TO CART (LIST) */
+function addToCartFromList(p, qty=1){
+  qty = Math.max(1, Math.min(10, Number(qty || 1)));
+  const key = `${p.id}__DEFAULT`;
+  const unitPrice = Number(p.price || 0);
 
+  if (!cart[key]) {
+    cart[key] = {
+      key,
+      id: String(p.id),
+      title: (p.title || "").slice(0, 55),
+      image: p.image || "",
+      unitPrice,
+      qty
+    };
+  } else {
+    cart[key].qty = Math.min(10, cart[key].qty + qty);
+  }
+
+  renderCart();
+  toast("Added to cart ✅");
+}
+
+/* QUICK VIEW */
 function openQV(p){
   qvImg.src = p.image;
   qvCat.textContent = (p.category || "").toUpperCase();
@@ -215,7 +225,8 @@ function openQV(p){
   qvDesc.textContent = p.description || "";
   qvGo.href = `product.html?id=${p.id}`;
 
-  qvAdd.onclick = () => addToCart(p);
+  qvAdd.onclick = () => addToCartFromList(p, 1);
+
   qvOverlay.classList.add("active");
   qvModal.classList.add("open");
 }
@@ -227,7 +238,7 @@ qvClose?.addEventListener("click", closeQV);
 qvOverlay?.addEventListener("click", closeQV);
 window.addEventListener("keydown", (e)=>{ if(e.key==="Escape") closeQV(); });
 
-// ===== PRODUCTS RENDER =====
+/* RENDER */
 function renderProducts(list){
   productGrid.innerHTML = list.map(p => `
     <div class="product-card" data-id="${p.id}">
@@ -252,18 +263,18 @@ function renderProducts(list){
   `).join("");
 }
 
-// ONE click handler (perfect)
+/* GRID CLICK */
 productGrid.addEventListener("click", (e) => {
-  // add to cart
-  const add = e.target.closest(".add-btn");
-  if (add) {
-    const id = String(add.dataset.add);
+  const addBtn = e.target.closest(".add-btn");
+  if (addBtn) {
+    const id = String(addBtn.dataset.add);
     const p = products.find(x => String(x.id) === id);
-    if (p) addToCart(p);
+    if (!p) return;
+    addBtn.animate([{transform:"scale(1)"},{transform:"scale(1.06)"},{transform:"scale(1)"}], {duration:180});
+    addToCartFromList(p, 1);
     return;
   }
 
-  // quick view
   const qv = e.target.closest(".quick-view");
   if (qv) {
     const card = e.target.closest(".product-card");
@@ -273,21 +284,12 @@ productGrid.addEventListener("click", (e) => {
     return;
   }
 
-  // else open detail
   const card = e.target.closest(".product-card");
   const id = card?.dataset.id;
   if (id) window.location.href = `product.html?id=${id}`;
 });
 
-function addToCart(p){
-  const id = String(p.id);
-  if (!cart[id]) cart[id] = { id, title: p.title.slice(0,55), price: p.price, image: p.image, qty: 1 };
-  else cart[id].qty += 1;
-  renderCart();
-  toast("Added to cart ✅");
-}
-
-// ===== API + CACHE =====
+/* CACHE + API */
 function getCached(){
   try{
     const raw = localStorage.getItem(CACHE_KEY);
@@ -322,7 +324,6 @@ async function fetchWithTimeout(url, timeoutMs=9000){
     return await res.json();
   } finally { clearTimeout(t); }
 }
-
 async function loadProducts(force=false){
   setStatus("", "");
   showSkeletons(8);
@@ -346,14 +347,14 @@ async function loadProducts(force=false){
     hideSkeletons();
     setStatus("ok", `Live products loaded ✅ (${products.length} products)`);
     renderProducts(products);
-  } catch (e){
+  } catch {
     hideSkeletons();
     setStatus("error", `Failed to load products ❌ <br><button id="retryBtn">Retry</button>`);
     document.getElementById("retryBtn")?.addEventListener("click", ()=>loadProducts(true));
   }
 }
 
-// ===== SEARCH =====
+/* SEARCH */
 function runSearch(query){
   const q = (query || "").trim().toLowerCase();
   if (!q){ renderProducts(products); toast("Showing all products"); return; }
@@ -364,7 +365,6 @@ function runSearch(query){
   renderProducts(list);
   toast(`Found ${list.length} items`);
 }
-
 heroSearchBtn?.addEventListener("click", ()=>{ runSearch(heroSearchInput.value); document.querySelector("#shop")?.scrollIntoView({behavior:"smooth"}); });
 heroSearchInput?.addEventListener("keydown",(e)=>{ if(e.key==="Enter") heroSearchBtn.click(); });
 
@@ -378,6 +378,7 @@ window.addEventListener("scroll", () => {
   });
 });
 
-// RUN
+/* RUN */
 renderCart();
+syncCartBadge();
 loadProducts();
