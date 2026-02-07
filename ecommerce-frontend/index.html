@@ -3,71 +3,133 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RR VADAPAV</title>
+  <title>RR MALL</title>
   <link rel="stylesheet" href="styles/main.css"/>
 </head>
 <body>
 
 <header class="main-header">
 
-  <!-- LEFT -->
   <div class="left">
-    <div class="hamburger">
+    <button class="hamburger" aria-label="Open menu">
       <span class="icon">☰</span>
-    </div>
+    </button>
   </div>
 
-  <!-- LOGO -->
   <div class="logo">
-    <img src="images.webp" alt="Logo"/>
-    <h2>RR VADAPAV</h2>
+    <h2>RR MALL</h2>
   </div>
 
-  <!-- DESKTOP NAV -->
   <nav class="nav-links">
     <a href="#">Home</a>
-    <a href="#">Products</a>
+    <a href="#shop">Products</a>
     <a href="#">About</a>
     <a href="#">Contact</a>
   </nav>
 
-  <!-- RIGHT -->
   <div class="header-right">
     <input class="search-input" type="text" placeholder="Search products">
-    <div class="search-icon">🔍</div>
-    <div class="cart">
-      🛒
-      <span class="cart-count">0</span>
-    </div>
+    <button class="search-icon" aria-label="Open search">🔍</button>
+
+    <button class="cart cart-btn" aria-label="Open cart">
+      🛒 <span class="cart-count">0</span>
+    </button>
   </div>
 
 </header>
 
-<!-- MOBILE MENU -->
-<nav class="mobile-menu">
+<!-- ✅ SLIDE MENU (LEFT -> RIGHT) -->
+<nav class="mobile-menu" aria-label="Mobile menu">
+  <div class="mobile-menu-header">
+    <h3>RR MALL</h3>
+    <button class="close-menu" aria-label="Close menu">✖</button>
+  </div>
+
   <a href="#">Home</a>
-  <a href="#">Products</a>
+  <a href="#shop">Products</a>
   <a href="#">About</a>
   <a href="#">Contact</a>
 </nav>
+<div class="menu-overlay" aria-hidden="true"></div>
 
-<!-- SEARCH POPUP -->
-<div class="search-popup">
+<!-- SEARCH POPUP (existing) -->
+<div class="search-popup" role="dialog" aria-label="Search">
   <input type="text" placeholder="Search products...">
-  <button class="close-search">✖</button>
+  <button class="close-search" aria-label="Close search">✖</button>
 </div>
 
-<!-- HERO -->
+<!-- 🔥 ULTIMATE HERO -->
 <section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-bg"></div>
+
   <div class="hero-content">
-    <h1>Biggest Sale of the Year!</h1>
-    <p>Up to 50% off on all items. Grab your favorites today!</p>
-    <a href="#shop" class="cta-button">Shop Now</a>
+    <div class="hero-badge">⚡ Free Delivery on orders above ₹499</div>
+
+    <h1>Welcome to <span>RR MALL</span></h1>
+    <p class="typing" aria-label="Tagline"></p>
+
+    <div class="hero-search">
+      <input id="heroSearchInput" type="text" placeholder="Search products (e.g. shoes, jacket)..." />
+      <button id="heroSearchBtn" aria-label="Search">🔍</button>
+    </div>
+
+    <div class="hero-buttons">
+      <a href="#shop" class="cta-primary">Shop Now</a>
+      <a href="#shop" class="cta-secondary">Trending</a>
+    </div>
   </div>
 </section>
 
-<!-- DEMO BUTTON -->
-<button class="add-cart-btn">Add to Cart (Demo)</button>
+<!-- PRODUCTS -->
+<section id="shop" class="product-section">
+  <h2 class="section-title">🔥 Trending Products</h2>
+
+  <!-- Skeletons -->
+  <div id="skeletonGrid" class="product-grid skeleton-grid" aria-hidden="true"></div>
+
+  <div id="productGrid" class="product-grid"></div>
+</section>
+
+<!-- MOBILE CART BAR -->
+<div class="mobile-cart-bar">
+  <span>🛒 Items: <b id="mobileCartCount">0</b></span>
+  <button class="cart-btn">View Cart</button>
+</div>
+
+<!-- ✅ CART DRAWER -->
+<aside class="cart-drawer" aria-label="Cart drawer" aria-hidden="true">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button class="close-cart" aria-label="Close cart">✖</button>
+  </div>
+
+  <div id="cartItems" class="cart-items"></div>
+
+  <div class="cart-footer">
+    <div class="cart-summary">
+      <div class="row">
+        <span>Subtotal</span>
+        <b id="cartSubtotal">₹ 0</b>
+      </div>
+      <div class="row small">
+        <span>Delivery</span>
+        <span id="cartDelivery">₹ 0</span>
+      </div>
+      <div class="row total">
+        <span>Total</span>
+        <b id="cartTotal">₹ 0</b>
+      </div>
+    </div>
+
+    <button id="checkoutBtn" class="checkout-btn">Checkout</button>
+    <button id="clearCartBtn" class="clear-btn">Clear Cart</button>
+  </div>
+</aside>
+<div class="cart-overlay" aria-hidden="true"></div>
+
+<!-- Toast -->
+<div id="toast" class="toast" aria-live="polite"></div>
 
 <script src="scripts/app.js"></script>
 </body>

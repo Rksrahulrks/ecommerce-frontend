@@ -1,73 +1,299 @@
-// 🍔 Hamburger Menu
-const hamburger = document.querySelector(".hamburger");
+// ===== Helpers =====
+const INR_RATE = 85; // USD to INR approx
+const money = (usd) => `₹ ${Math.round(usd * INR_RATE)}`;
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(() => t.classList.remove("show"), 1200);
+}
+
+// ===== Slide Menu (LEFT -> RIGHT) =====
+const hamburgerBtn = document.querySelector(".hamburger");
 const mobileMenu = document.querySelector(".mobile-menu");
-const icon = document.querySelector(".hamburger .icon");
+const menuOverlay = document.querySelector(".menu-overlay");
+const closeMenuBtn = document.querySelector(".close-menu");
 
-hamburger.addEventListener("click", () => {
-  mobileMenu.classList.toggle("open");
-  icon.textContent = mobileMenu.classList.contains("open") ? "✖" : "☰";
-});
+function openMenu() {
+  mobileMenu.classList.add("open");
+  menuOverlay.classList.add("active");
+}
+function closeMenu() {
+  mobileMenu.classList.remove("open");
+  menuOverlay.classList.remove("active");
+}
+hamburgerBtn?.addEventListener("click", openMenu);
+closeMenuBtn?.addEventListener("click", closeMenu);
+menuOverlay?.addEventListener("click", closeMenu);
 
-// 🔍 Search Popup
+// ===== Search Popup =====
 const searchIcon = document.querySelector(".search-icon");
 const searchPopup = document.querySelector(".search-popup");
 const closeSearch = document.querySelector(".close-search");
+searchIcon?.addEventListener("click", () => searchPopup.classList.add("open"));
+closeSearch?.addEventListener("click", () => searchPopup.classList.remove("open"));
 
-searchIcon.addEventListener("click", () => searchPopup.classList.add("open"));
-closeSearch.addEventListener("click", () => searchPopup.classList.remove("open"));
-
-// 🛒 Cart Count Logic
-let cartCount = 0;
-const cartCountEl = document.querySelector(".cart-count");
-const addCartBtn = document.querySelector(".add-cart-btn");
-
-addCartBtn.addEventListener("click", () => {
-  cartCount++;
-  cartCountEl.textContent = cartCount;
-});
-
-// HERO BACKGROUND CROSSFADE
-const hero = document.querySelector('.hero');
-
-const heroImages = [
-  'https://www.shutterstock.com/image-photo/vada-pav-600w-2644974525.jpg',
-  'https://media.istockphoto.com/id/1329213718/photo/vada-pav.jpg?s=612x612&w=0&k=20&c=Yy3pm53KrPAnZXL9weCJDzXjxa2My34oVFx7RBCPmZ8=',
-  'https://t3.ftcdn.net/jpg/15/58/30/60/240_F_1558306013_Ph71IR40e98WXOwg6VKHSrzk4xrUTUvF.jpg'
+// ===== Hero typing + search =====
+const typingEl = document.querySelector(".typing");
+const lines = [
+  "Best deals • Fast delivery • Easy returns",
+  "New arrivals everyday • Grab your favourites",
+  "Mega Sale Live • Up to 50% OFF"
 ];
+let li = 0, ci = 0, deleting = false;
 
-let currentIndex = 0;
+function typeLoop() {
+  if (!typingEl) return;
 
-// Create two divs for crossfade
-const div1 = document.createElement('div');
-const div2 = document.createElement('div');
+  const text = lines[li];
+  if (!deleting) {
+    ci++;
+    typingEl.textContent = text.slice(0, ci);
+    if (ci >= text.length) {
+      deleting = true;
+      setTimeout(typeLoop, 1200);
+      return;
+    }
+  } else {
+    ci--;
+    typingEl.textContent = text.slice(0, ci);
+    if (ci <= 0) {
+      deleting = false;
+      li = (li + 1) % lines.length;
+    }
+  }
+  setTimeout(typeLoop, deleting ? 35 : 55);
+}
+typeLoop();
 
-[div1, div2].forEach(div => {
-  div.style.position = 'absolute';
-  div.style.top = 0;
-  div.style.left = 0;
-  div.style.width = '100%';
-  div.style.height = '100%';
-  div.style.backgroundSize = 'cover';
-  div.style.backgroundPosition = 'center';
-  div.style.transition = 'opacity 1.5s ease-in-out';
-  div.style.zIndex = '-1';
-  div.style.opacity = 0;
-  hero.prepend(div);
+const heroSearchInput = document.getElementById("heroSearchInput");
+const heroSearchBtn = document.getElementById("heroSearchBtn");
+
+// ===== Product + Cart State =====
+const productGrid = document.getElementById("productGrid");
+const skeletonGrid = document.getElementById("skeletonGrid");
+
+const cartCountEl = document.querySelector(".cart-count");
+const mobileCartCount = document.getElementById("mobileCartCount");
+
+const cartDrawer = document.querySelector(".cart-drawer");
+const cartOverlay = document.querySelector(".cart-overlay");
+const cartItemsEl = document.getElementById("cartItems");
+const cartSubtotalEl = document.getElementById("cartSubtotal");
+const cartDeliveryEl = document.getElementById("cartDelivery");
+const cartTotalEl = document.getElementById("cartTotal");
+
+const closeCartBtn = document.querySelector(".close-cart");
+const clearCartBtn = document.getElementById("clearCartBtn");
+const checkoutBtn = document.getElementById("checkoutBtn");
+const cartOpenBtns = document.querySelectorAll(".cart-btn");
+
+let products = [];           // full products list
+let filteredProducts = [];   // for searching
+let cart = loadCart();       // { [id]: {id,title,price,image,qty} }
+
+function loadCart() {
+  try {
+    const raw = localStorage.getItem("rrmall_cart");
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+function saveCart() {
+  localStorage.setItem("rrmall_cart", JSON.stringify(cart));
+}
+function cartCount() {
+  return Object.values(cart).reduce((sum, it) => sum + it.qty, 0);
+}
+function cartSubtotalUsd() {
+  return Object.values(cart).reduce((sum, it) => sum + (it.price * it.qty), 0);
+}
+
+function openCart() {
+  cartDrawer.classList.add("open");
+  cartOverlay.classList.add("active");
+  cartDrawer.setAttribute("aria-hidden", "false");
+}
+function closeCart() {
+  cartDrawer.classList.remove("open");
+  cartOverlay.classList.remove("active");
+  cartDrawer.setAttribute("aria-hidden", "true");
+}
+
+cartOpenBtns.forEach(btn => btn.addEventListener("click", openCart));
+closeCartBtn?.addEventListener("click", closeCart);
+cartOverlay?.addEventListener("click", closeCart);
+
+// ===== Render Cart =====
+function renderCart() {
+  const items = Object.values(cart);
+
+  // Empty state
+  if (items.length === 0) {
+    cartItemsEl.innerHTML = `
+      <div style="padding:14px; text-align:center; opacity:.8;">
+        Your cart is empty 🛒
+      </div>
+    `;
+  } else {
+    cartItemsEl.innerHTML = items.map(it => `
+      <div class="cart-item" data-id="${it.id}">
+        <img src="${it.image}" alt="">
+        <div class="info">
+          <div class="title">${it.title}</div>
+          <div class="price">${money(it.price)}</div>
+
+          <div class="qty-row">
+            <button class="qty-btn" data-action="dec">-</button>
+            <b>${it.qty}</b>
+            <button class="qty-btn" data-action="inc">+</button>
+            <button class="remove-btn" data-action="remove">Remove</button>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  // Totals
+  const subUsd = cartSubtotalUsd();
+  const count = cartCount();
+
+  // Delivery rule (example): free over ₹499
+  const subInr = Math.round(subUsd * INR_RATE);
+  const deliveryInr = (subInr >= 499 || subInr === 0) ? 0 : 49;
+  const totalInr = subInr + deliveryInr;
+
+  cartSubtotalEl.textContent = `₹ ${subInr}`;
+  cartDeliveryEl.textContent = `₹ ${deliveryInr}`;
+  cartTotalEl.textContent = `₹ ${totalInr}`;
+
+  // Badges
+  cartCountEl.textContent = count;
+  mobileCartCount.textContent = count;
+
+  saveCart();
+}
+
+// Cart item actions (event delegation)
+cartItemsEl.addEventListener("click", (e) => {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+
+  const wrap = e.target.closest(".cart-item");
+  if (!wrap) return;
+  const id = wrap.dataset.id;
+  if (!cart[id]) return;
+
+  const action = btn.dataset.action;
+
+  if (action === "inc") cart[id].qty += 1;
+  if (action === "dec") cart[id].qty = Math.max(1, cart[id].qty - 1);
+  if (action === "remove") delete cart[id];
+
+  renderCart();
 });
 
-// Initialize first image
-div1.style.backgroundImage = `url(${heroImages[currentIndex]})`;
-div1.style.opacity = 1;
+// Clear / Checkout
+clearCartBtn?.addEventListener("click", () => {
+  cart = {};
+  renderCart();
+  toast("Cart cleared");
+});
+checkoutBtn?.addEventListener("click", () => {
+  if (cartCount() === 0) return toast("Cart is empty");
+  toast("Checkout coming soon 😈");
+});
 
-setInterval(() => {
-  const nextIndex = (currentIndex + 1) % heroImages.length;
+// ===== Render Products =====
+function showSkeletons() {
+  if (!skeletonGrid) return;
+  skeletonGrid.innerHTML = "";
+  for (let i = 0; i < 8; i++) {
+    skeletonGrid.innerHTML += `<div class="skeleton-card"></div>`;
+  }
+}
+function hideSkeletons() {
+  if (!skeletonGrid) return;
+  skeletonGrid.innerHTML = "";
+}
 
-  const fadeOutDiv = currentIndex % 2 === 0 ? div1 : div2;
-  const fadeInDiv = currentIndex % 2 === 0 ? div2 : div1;
+function renderProducts(list) {
+  filteredProducts = list;
 
-  fadeInDiv.style.backgroundImage = `url(${heroImages[nextIndex]})`;
-  fadeInDiv.style.opacity = 1;    // fade in new image
-  fadeOutDiv.style.opacity = 0;   // fade out old image
+  productGrid.innerHTML = list.map(p => `
+    <div class="product-card">
+      <img src="${p.image}" loading="lazy" alt="${p.title}">
+      <h3>${p.title.slice(0, 38)}...</h3>
+      <p>${money(p.price)}</p>
+      <button class="add-btn" data-id="${p.id}">Add to Cart</button>
+    </div>
+  `).join("");
+}
 
-  currentIndex = nextIndex;
-}, 6000);
+// Add to cart from grid
+productGrid.addEventListener("click", (e) => {
+  const btn = e.target.closest(".add-btn");
+  if (!btn) return;
+
+  const id = String(btn.dataset.id);
+  const p = products.find(x => String(x.id) === id);
+  if (!p) return;
+
+  if (!cart[id]) {
+    cart[id] = { id, title: p.title.slice(0, 55), price: p.price, image: p.image, qty: 1 };
+  } else {
+    cart[id].qty += 1;
+  }
+
+  renderCart();
+  toast("Added to cart ✅");
+});
+
+// ===== Fetch Products =====
+async function loadProducts() {
+  try {
+    showSkeletons();
+    const res = await fetch("https://fakestoreapi.com/products");
+    const data = await res.json();
+    products = data;
+    hideSkeletons();
+    renderProducts(products);
+  } catch (err) {
+    hideSkeletons();
+    productGrid.innerHTML = `<p style="text-align:center;">Failed to load products.</p>`;
+  }
+}
+loadProducts();
+renderCart();
+
+// ===== Hero search => filter products and scroll to shop =====
+function doSearch() {
+  const q = (heroSearchInput?.value || "").trim().toLowerCase();
+  if (!q) {
+    renderProducts(products);
+    toast("Showing all products");
+    document.querySelector("#shop")?.scrollIntoView({ behavior: "smooth" });
+    return;
+  }
+  const list = products.filter(p =>
+    p.title.toLowerCase().includes(q) ||
+    (p.category && p.category.toLowerCase().includes(q))
+  );
+  renderProducts(list);
+  toast(`Found ${list.length} items`);
+  document.querySelector("#shop")?.scrollIntoView({ behavior: "smooth" });
+}
+heroSearchBtn?.addEventListener("click", doSearch);
+heroSearchInput?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") doSearch();
+});
+
+// ===== Parallax effect =====
+window.addEventListener("scroll", () => {
+  document.querySelectorAll(".hero-bg").forEach(bg => {
+    bg.style.transform = `translateY(${window.scrollY * 0.18}px)`;
+  });
+});
