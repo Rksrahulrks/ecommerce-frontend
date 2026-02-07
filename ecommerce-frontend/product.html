@@ -51,9 +51,17 @@
 
   <section class="pd-card">
     <div class="pd-left">
-      <div class="pd-image-shell">
+      <!-- ✅ Lens Zoom container -->
+      <div class="pd-image-shell" id="zoomBox">
         <img id="pdImage" alt="Product image" />
-        <div class="pd-zoom-hint">Hover to zoom</div>
+        <div class="pd-zoom-hint" id="zoomHint">Hover to zoom • Tap to toggle</div>
+        <div class="pd-lens" id="zoomLens" aria-hidden="true"></div>
+      </div>
+
+      <div class="pd-mini">
+        <button class="pd-mini-btn active" data-view="main">Main</button>
+        <button class="pd-mini-btn" data-view="alt">Alt</button>
+        <button class="pd-mini-btn" data-view="detail">Detail</button>
       </div>
     </div>
 
@@ -66,11 +74,49 @@
       <h1 id="pdTitle" class="pd-title"></h1>
 
       <div class="pd-price">
-        <span id="pdPrice" class="pd-new"></span>
-        <span id="pdOldPrice" class="pd-old"></span>
+        <span class="pd-new" id="pdUnitPrice"></span>
+        <span class="pd-old" id="pdOldPrice"></span>
       </div>
 
       <p id="pdDesc" class="pd-desc"></p>
+
+      <!-- ✅ VARIATIONS -->
+      <div class="pd-variants">
+        <div class="pd-variant">
+          <div class="pd-variant-top">
+            <span class="pd-variant-title">Size</span>
+            <span class="pd-variant-value" id="sizeValue">M</span>
+          </div>
+          <div class="pd-chip-row" id="sizeChips"></div>
+        </div>
+
+        <div class="pd-variant">
+          <div class="pd-variant-top">
+            <span class="pd-variant-title">Color</span>
+            <span class="pd-variant-value" id="colorValue">Gold</span>
+          </div>
+          <div class="pd-chip-row" id="colorChips"></div>
+        </div>
+      </div>
+
+      <!-- ✅ QTY + LIVE TOTAL -->
+      <div class="pd-buybox">
+        <div class="pd-qty">
+          <span class="pd-qty-label">Quantity</span>
+          <div class="pd-qty-ctrl">
+            <button id="qtyMinus" class="pd-qty-btn">−</button>
+            <span id="qtyVal" class="pd-qty-val">1</span>
+            <button id="qtyPlus" class="pd-qty-btn">+</button>
+          </div>
+          <span class="pd-qty-cap">Max 10</span>
+        </div>
+
+        <div class="pd-total">
+          <span class="pd-total-label">Total</span>
+          <span id="pdTotalPrice" class="pd-total-price">₹ 0</span>
+          <span class="pd-total-sub" id="pdTotalSub">incl. variation</span>
+        </div>
+      </div>
 
       <div class="pd-actions">
         <button id="pdAddBtn" class="pd-add-btn">Add to Cart</button>
@@ -125,7 +171,6 @@
 <div class="cart-overlay" aria-hidden="true"></div>
 
 <div id="toast" class="toast" aria-live="polite"></div>
-
 <script src="scripts/product.js"></script>
 </body>
 </html>
