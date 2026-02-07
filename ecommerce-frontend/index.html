@@ -18,6 +18,7 @@
 
   <div class="logo">
     <h2>RR MALL</h2>
+    <span class="logo-tag">Premium Store</span>
   </div>
 
   <nav class="nav-links">
@@ -28,7 +29,7 @@
   </nav>
 
   <div class="header-right">
-    <input class="search-input" type="text" placeholder="Search products">
+    <input class="search-input" id="topSearchInput" type="text" placeholder="Search products...">
     <button class="search-icon" aria-label="Open search">🔍</button>
 
     <button class="cart cart-btn" aria-label="Open cart">
@@ -38,7 +39,7 @@
 
 </header>
 
-<!-- ✅ SLIDE MENU (LEFT -> RIGHT) -->
+<!-- ✅ SLIDE MENU -->
 <nav class="mobile-menu" aria-label="Mobile menu">
   <div class="mobile-menu-header">
     <h3>RR MALL</h3>
@@ -52,26 +53,26 @@
 </nav>
 <div class="menu-overlay" aria-hidden="true"></div>
 
-<!-- SEARCH POPUP (existing) -->
+<!-- SEARCH POPUP -->
 <div class="search-popup" role="dialog" aria-label="Search">
-  <input type="text" placeholder="Search products...">
+  <input id="popupSearchInput" type="text" placeholder="Search products...">
   <button class="close-search" aria-label="Close search">✖</button>
 </div>
 
-<!-- 🔥 ULTIMATE HERO -->
+<!-- 🔥 PREMIUM HERO (shorter) -->
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-bg"></div>
 
   <div class="hero-content">
-    <div class="hero-badge">⚡ Free Delivery on orders above ₹499</div>
+    <div class="hero-badge">✨ Premium deals • Fast delivery • Easy returns</div>
 
-    <h1>Welcome to <span>RR MALL</span></h1>
+    <h1>Shop Smarter with <span>RR MALL</span></h1>
     <p class="typing" aria-label="Tagline"></p>
 
     <div class="hero-search">
-      <input id="heroSearchInput" type="text" placeholder="Search products (e.g. shoes, jacket)..." />
-      <button id="heroSearchBtn" aria-label="Search">🔍</button>
+      <input id="heroSearchInput" type="text" placeholder="Search products (e.g. jacket, shoes)..." />
+      <button id="heroSearchBtn" aria-label="Search">Search</button>
     </div>
 
     <div class="hero-buttons">
@@ -83,11 +84,11 @@
 
 <!-- PRODUCTS -->
 <section id="shop" class="product-section">
-  <h2 class="section-title">🔥 Trending Products</h2>
+  <h2 class="section-title">Trending Products</h2>
 
-  <!-- Skeletons -->
+  <div id="productStatus" class="product-status" role="status" aria-live="polite"></div>
+
   <div id="skeletonGrid" class="product-grid skeleton-grid" aria-hidden="true"></div>
-
   <div id="productGrid" class="product-grid"></div>
 </section>
 
