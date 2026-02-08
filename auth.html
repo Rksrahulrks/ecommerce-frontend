@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RR MALL • Login</title>
+  <link rel="stylesheet" href="styles/main.css"/>
+</head>
+<body>
+
+<header class="main-header">
+  <div class="left">
+    <button class="hamburger" aria-label="Open menu">☰</button>
+  </div>
+
+  <div class="logo">
+    <h2>RR MALL</h2>
+    <span class="logo-tag">Premium</span>
+  </div>
+
+  <nav class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#shop">Products</a>
+    <a href="cart.html">Cart</a>
+    <a href="auth.html" class="active-link">Login</a>
+  </nav>
+
+  <div class="header-right">
+    <a class="back-link" href="index.html">← Back</a>
+  </div>
+</header>
+
+<nav class="mobile-menu" aria-label="Mobile menu">
+  <div class="mobile-menu-header">
+    <h3>RR MALL</h3>
+    <button class="close-menu" type="button" aria-label="Close menu">✖</button>
+  </div>
+  <a href="index.html">Home</a>
+  <a href="index.html#shop">Products</a>
+  <a href="cart.html">Cart</a>
+  <a href="auth.html">Login</a>
+</nav>
+<div class="menu-overlay" aria-hidden="true"></div>
+
+<main class="auth-page">
+  <section class="auth-shell">
+    <div class="auth-left">
+      <div class="auth-badge">🔒 Secure Access</div>
+      <h1>Welcome to <span>RR MALL</span></h1>
+      <p class="auth-sub">
+        Login to save items, keep cart synced, and checkout faster.
+      </p>
+
+      <ul class="auth-features">
+        <li>✅ Secure Firebase authentication</li>
+        <li>✅ Session persists after refresh</li>
+        <li>✅ Logout & user chip in navbar</li>
+      </ul>
+
+      <div class="auth-mini-note">
+        Tip: Email/Password sign-in must be enabled in Firebase Console.
+      </div>
+    </div>
+
+    <div class="auth-right">
+      <div class="auth-toggle" role="tablist" aria-label="Auth toggle">
+        <button id="tabLogin" class="auth-tab active" role="tab" aria-selected="true">Login</button>
+        <button id="tabSignup" class="auth-tab" role="tab" aria-selected="false">Sign up</button>
+      </div>
+
+      <form id="loginForm" class="auth-form" autocomplete="on" novalidate>
+        <h2 class="auth-title">Login</h2>
+        <p class="auth-desc">Enter your credentials to continue.</p>
+
+        <div class="field">
+          <label>Email</label>
+          <input id="loginEmail" type="email" placeholder="you@gmail.com" required />
+          <small class="error" id="loginEmailErr"></small>
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <div class="pass-wrap">
+            <input id="loginPass" type="password" placeholder="Enter password" required />
+            <button class="eye" type="button" data-eye="loginPass" aria-label="Toggle password">👁</button>
+          </div>
+          <small class="error" id="loginPassErr"></small>
+        </div>
+
+        <div class="auth-row">
+          <label class="check">
+            <input id="rememberMe" type="checkbox" checked />
+            <span>Keep me logged in</span>
+          </label>
+
+          <a href="#" id="forgotLink" class="auth-link">Forgot Password?</a>
+        </div>
+
+        <button class="auth-btn primary" type="submit">Login</button>
+
+        <p class="auth-foot">
+          Don’t have an account?
+          <button type="button" class="auth-link-btn" id="goSignup">Create one</button>
+        </p>
+      </form>
+
+      <form id="signupForm" class="auth-form hidden" autocomplete="on" novalidate>
+        <h2 class="auth-title">Create Account</h2>
+        <p class="auth-desc">Join RR MALL for a premium experience.</p>
+
+        <div class="field">
+          <label>Full Name</label>
+          <input id="suName" type="text" placeholder="Rahul Kumar" required />
+          <small class="error" id="suNameErr"></small>
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input id="suEmail" type="email" placeholder="you@gmail.com" required />
+          <small class="error" id="suEmailErr"></small>
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <div class="pass-wrap">
+            <input id="suPass" type="password" placeholder="Min 8 chars with Aa1" required />
+            <button class="eye" type="button" data-eye="suPass" aria-label="Toggle password">👁</button>
+          </div>
+
+          <div class="strength">
+            <div class="bar" id="pwBar"></div>
+            <span id="pwLabel">Strength: —</span>
+          </div>
+
+          <small class="hint">Must contain uppercase, lowercase, and number.</small>
+          <small class="error" id="suPassErr"></small>
+        </div>
+
+        <div class="field">
+          <label>Confirm Password</label>
+          <div class="pass-wrap">
+            <input id="suPass2" type="password" placeholder="Re-enter password" required />
+            <button class="eye" type="button" data-eye="suPass2" aria-label="Toggle password">👁</button>
+          </div>
+          <small class="error" id="suPass2Err"></small>
+        </div>
+
+        <button class="auth-btn primary" type="submit">Sign Up</button>
+
+        <p class="auth-foot">
+          Already have an account?
+          <button type="button" class="auth-link-btn" id="goLogin">Login</button>
+        </p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<div id="toast" class="toast" aria-live="polite"></div>
+
+<!-- IMPORTANT: use firebase auth module -->
+<script type="module" src="scripts/auth-firebase.js"></script>
+</body>
+</html>
